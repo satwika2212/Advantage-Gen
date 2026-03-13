@@ -2,9 +2,7 @@ const Campaign = require('../models/Campaign');
 const { uploadToCloudinary } = require('./cloudinaryUpload');
 
 class CampaignService {
-  /**
-   * Save a generated campaign to MongoDB and Cloudinary
-   */
+  
   async saveCampaign(campaignData) {
     try {
       const {
@@ -74,9 +72,7 @@ class CampaignService {
     }
   }
 
-  /**
-   * Get all saved campaigns
-   */
+
   async getAllCampaigns(limit = 20, skip = 0) {
     try {
       const campaigns = await Campaign.find({})
@@ -122,9 +118,7 @@ class CampaignService {
     }
   }
 
-  /**
-   * Create a remix of an existing campaign
-   */
+  
   async createRemix(originalCampaignId, modifications) {
     try {
       // Get original campaign
@@ -162,9 +156,7 @@ class CampaignService {
     }
   }
 
-  /**
-   * Helper to modify prompts for remix
-   */
+ 
   modifyPrompt(originalPrompt, modifications, original) {
     let prompt = originalPrompt;
 
@@ -184,9 +176,6 @@ class CampaignService {
     return prompt;
   }
 
-  /**
-   * Delete a campaign
-   */
   async deleteCampaign(id) {
     try {
       const campaign = await Campaign.findById(id);
