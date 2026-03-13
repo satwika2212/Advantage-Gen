@@ -4,6 +4,9 @@ class HuggingFaceService {
   constructor() {
     this.apiKey = process.env.HUGGINGFACE_API_KEY;
     this.model = process.env.IMAGE_MODEL;
+    if (!this.model) {
+  throw new Error("IMAGE_MODEL not set in .env");
+}
     this.baseUrl = 'https://api-inference.huggingface.co/models/';
   }
 

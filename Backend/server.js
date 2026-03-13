@@ -1,11 +1,7 @@
-// ============================================
-// FILE: server.js
-// PURPOSE: Main server file with CORS configured
-// ============================================
-
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 
 // Load environment variables
 dotenv.config();
@@ -13,67 +9,70 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-// ============================================
-// MIDDLEWARE - Things that process requests
-// ============================================
-
-// ✅ IMPORTANT: CORS configuration goes HERE
-// Allow frontend (React on port 3000) to talk to backend
+// CORS middleware - VERY IMPORTANT for frontend connection
 app.use(cors({
-  origin: 'http://localhost:5173', // React app address
-  credentials: true
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Parse JSON data from requests
-app.use(express.json({ limit: '10mb' }));
+// Parse JSON bodies
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Serve uploaded files
-app.use('/uploads', express.static('uploads'));
-
-// Log all requests (helpful for debugging)
+// Request logging middleware
 app.use((req, res, next) => {
   console.log(`📡 ${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
-// ============================================
-// DATABASE CONNECTION
-// ============================================
-// ... your database code ...
-
-// ============================================
-// ROUTES - API endpoints
-// ============================================
+// Import routes
 const apiRoutes = require('./routes/api');
+
+// Use routes
 app.use('/api', apiRoutes);
 
-// ============================================
-// ROOT ROUTE
-// ============================================
+// Root route
 app.get('/', (req, res) => {
   res.json({
     message: '🚀 AdVantage Gen API',
-    status: 'running'
+    status: 'running',
+    endpoints: {
+      test: '/api/test',
+      options: '/api/options',
+      generateImage: '/api/generate-image',
+      generateCaption: '/api/generate-caption',
+      fullCampaign: '/api/full-campaign',
+      campaigns: '/api/campaigns'
+    }
   });
 });
 
-// ============================================
-// ERROR HANDLING
-// ============================================
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint not found' });
+});
+
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.stack);
+  console.error('❌ Server error:', err.stack);
   res.status(500).json({ 
     success: false, 
-    error: err.message || 'Something went wrong!' 
+    error: err.message || 'Something went wrong!'
   });
 });
 
-// ============================================
-// START SERVER
-// ============================================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`
-🚀 Server running!    
+┌─────────────────────────────────────┐
+│   🚀 AdVantage Gen API Server       │
+├─────────────────────────────────────┤
+│   Status: Running                    │
+│   Port: ${PORT}                        │
+│   Test: http://localhost:${PORT}/api/test │
+│   Full: http://localhost:${PORT}/api/full-campaign │
+└─────────────────────────────────────┘
   `);
 });
