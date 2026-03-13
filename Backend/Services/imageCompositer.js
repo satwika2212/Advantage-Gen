@@ -12,14 +12,14 @@ class ImageCompositorService {
 
   async compositeImage(options) {
     const {
-      imageBuffer,           // The generated image
-      logoBuffer,            // User's logo (can be null)
-      ctaText = 'Shop Now',  // Button text
-      ctaColor = '#007AFF',  // Button color
-      logoPosition = 'top-left',     // Where to put logo
-      ctaPosition = 'bottom-right',  // Where to put button
-      logoOpacity = 0.8,      // Logo transparency (0-1)
-      logoSize = 100          // Logo width in pixels
+      imageBuffer,           
+      logoBuffer,            
+      ctaText = 'Shop Now',  
+      ctaColor = '#007AFF',  
+      logoPosition = 'top-left',     
+      ctaPosition = 'bottom-right',  
+      logoOpacity = 0.8,      
+      logoSize = 100          
     } = options;
 
     try {
