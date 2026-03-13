@@ -1,12 +1,7 @@
 const cloudinary = require('../config/cloudinary');
 const streamifier = require('streamifier');
 
-/**
- * Upload image buffer to Cloudinary
- * @param {Buffer} imageBuffer - The image buffer from generation
- * @param {String} folder - Folder name in Cloudinary
- * @returns {Promise} - Cloudinary upload result
- */
+
 const uploadToCloudinary = (imageBuffer, folder = 'advantagegen') => {
   return new Promise((resolve, reject) => {
     // Create upload stream
@@ -36,10 +31,7 @@ const uploadToCloudinary = (imageBuffer, folder = 'advantagegen') => {
   });
 };
 
-/**
- * Delete image from Cloudinary
- * @param {String} publicId - Cloudinary public ID
- */
+
 const deleteFromCloudinary = async (publicId) => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
